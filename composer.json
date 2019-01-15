@@ -1,0 +1,15 @@
+{
+    "name": "aplia/childrenindexer",
+    "description": "Children indexer allows you to index subitems as an attribute of the parent node. It also works with eZFind.",
+    "keywords": ["ezextension", "search", "indexing"],
+    "homepage": "https://github.com/Aplia/childrenindexer",
+    "type": "ezpublish-legacy-extension",
+    "license": "GPL-2.0",
+    "extra": {
+        "ezpublish-legacy-extension-name": "childrenindexer"
+    },
+    "require": {
+        "php": ">=5.3",
+        "composer/composer": ">=1.0"
+    }
+}
