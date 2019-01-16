@@ -79,20 +79,25 @@ class ezfSolrDocumentFieldChildrenIndex extends ezfSolrDocumentFieldObjectRelati
      */
     public function getData()
     {
-        
+
         $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
         $fieldName = self::getFieldName( $contentClassAttribute );
-        
+
         $contentObjectID = $this->ContentObjectAttribute->attribute( 'contentobject_id' );
 
         $mainNode = eZContentObject::fetch($contentObjectID)->mainNode();
         $children = $mainNode->children();
-        
+
         switch ( $contentClassAttribute->attribute( 'data_type_string' ) )
         {
             case 'childrenindexer' :
             {
-                $IncludedClass = eZINI::instance('ezcade.ini')->variable('ZoneArticleSettings', 'IncludedClass');
+
+                // Get eg. IncludedClass[study]=subparagraph,article
+                $IncludedClass = eZINI::instance('childrenindexer.ini')->variable('ChildrenIndexerClasses', 'IncludedClass');
+                $IncludedClass = isset($IncludedClass[$mainNode->classIdentifier()]) ? $IncludedClass[$mainNode->classIdentifier()] : '';
+                $IncludedClass = explode(',', $IncludedClass);
+
                 $returnArray = array();
                 foreach( $children as $child )
                 {
@@ -100,6 +105,7 @@ class ezfSolrDocumentFieldChildrenIndex extends ezfSolrDocumentFieldObjectRelati
                     {
                         continue;
                     }
+
                     // 1st create aggregated metadata fields
                     $metaAttributeValues = eZSolr::getMetaAttributesForObject( $child->object() );
                     foreach ( $metaAttributeValues as $metaInfo )
@@ -120,7 +126,7 @@ class ezfSolrDocumentFieldChildrenIndex extends ezfSolrDocumentFieldObjectRelati
                 $returnArray[$defaultFieldName] = $this->strip_html_tags( $this->getPlainTextRepresentation( ) );
                 return $returnArray;
             } break;
-         
+
             default:
             {
                     $return = array( $fieldName => '' );
@@ -129,6 +135,6 @@ class ezfSolrDocumentFieldChildrenIndex extends ezfSolrDocumentFieldObjectRelati
         return $returm;
     }
 }
- 
+
 
 ?>

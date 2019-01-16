@@ -35,14 +35,17 @@ class ChildrenIndexerType extends eZDataType
     function metaData( $contentObjectAttribute )
     {
         $metaDataArray = $attributes = array();
-        $children = $contentObjectAttribute->object()->mainNode()->children();
-        $IncludedClass = eZINI::instance('ezcade.ini')->variable('ZoneArticleSettings', 'IncludedClass');
-        
+        $mainNode = $contentObjectAttribute->object()->mainNode();
+        $children = $mainNode->children();
+        $IncludedClass = eZINI::instance('childrenindexer.ini')->variable('ChildrenIndexerClasses', 'IncludedClass');
+        $IncludedClass = isset($IncludedClass[$mainNode->classIdentifier()]) ? $IncludedClass[$mainNode->classIdentifier()] : '';
+        $IncludedClass = explode(',', $IncludedClass);
+
         if(is_array($children))
         {
             foreach( $children as $child )
             {
-            	if(!in_array( $child->classIdentifier(), $IncludedClass ) )
+                if(!in_array( $child->classIdentifier(), $IncludedClass ) )
                 {
                     continue;
                 }
