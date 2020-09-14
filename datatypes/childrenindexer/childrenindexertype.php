@@ -36,6 +36,10 @@ class ChildrenIndexerType extends eZDataType
     {
         $metaDataArray = $attributes = array();
         $mainNode = $contentObjectAttribute->object()->mainNode();
+        if ( !$mainNode )
+        {
+            return $metaDataArray;
+        }
         $children = $mainNode->children();
         $IncludedClass = eZINI::instance('childrenindexer.ini')->variable('ChildrenIndexerClasses', 'IncludedClass');
         $IncludedClass = isset($IncludedClass[$mainNode->classIdentifier()]) ? $IncludedClass[$mainNode->classIdentifier()] : '';
